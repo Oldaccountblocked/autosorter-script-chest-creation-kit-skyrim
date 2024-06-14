@@ -1,0 +1,33 @@
+Scriptname AutosorterPelt extends ObjectReference
+
+FormList Property AutoSorterPeltList Auto
+ObjectReference Property AutosorterPeltChest Auto
+ 
+Event OnActivate(ObjectReference akActionref)
+		PlayGamebryoAnimation("open")
+		PlayAnimation("open")
+		MoveListItemsToChest(akActionref)
+EndEvent
+ 
+Function MoveListItemsToChest(ObjectReference akActionRef)
+
+	Actor Player = Game.GetPlayer()
+	Int FormToFind = 0
+	Int MaxSize = AutoSorterPeltList.GetSize() 
+
+While FormToFind <= MaxSize
+
+	Form ItemToMove = AutoSorterPeltList.GetAt(FormToFind)
+	Int ItemToMoveCount = Player.GetItemCount(AutoSorterPeltList.GetAt(FormToFind))
+
+	If ItemToMoveCount >= 1
+		Player.RemoveItem(ItemToMove, ItemToMoveCount, True, AutoSorterPeltChest)
+		Debug.Notification("Removed "+ItemToMoveCount+ItemToMove+" from the player")
+		FormToFind += 1
+	ElseIf ItemToMoveCount == 0
+		FormToFind += 1
+		Debug.Notification("No pelt was found")
+	EndIf
+EndWhile
+ 
+EndFunction
